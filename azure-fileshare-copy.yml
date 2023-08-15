@@ -32,5 +32,5 @@ steps:
   displayName: 'Generate SAS Token for Destination'
 
 - script: |
-    ./azcopy copy "https://$(sourceStorageAccount).file.core.windows.net/wwwroot?$(srcSasToken)" "https://$(destinationStorageAccount).file.core.windows.net/wwwroot?$(destSasToken)" --recursive --include-pattern 'workflow.json'
+    azcopy copy "https://$(sourceStorageAccount).file.core.windows.net/$(sourceFileShare)/site/wwwroot?$(srcSasToken)" "https://$(destinationStorageAccount).file.core.windows.net/$(destinationFileShare)/site/wwwroot?$(destSasToken)" --recursive --include-pattern 'workflow.json'
   displayName: 'Copy Files using AzCopy'
