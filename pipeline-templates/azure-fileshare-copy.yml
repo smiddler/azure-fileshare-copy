@@ -40,7 +40,7 @@ stages:
 
 - stage: CopyFiles_${{parameters.environmentType}}
   variables:
-    - template: ../variables/${{parameters.environmentType}}.parameters.yml
+  - template: ../variables/${{parameters.environmentType}}.parameters.yml
     srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['SourceSASToken.srcSasToken'] ]
     srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['DestinationSASToken.destSasToken'] ]
   jobs:
