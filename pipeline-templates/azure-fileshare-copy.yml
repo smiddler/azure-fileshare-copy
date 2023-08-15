@@ -2,11 +2,10 @@ parameters:
 - name: environmentType
   type: string
 
-variables:
-- template: variables/${{environmentType.parameters}}.parameters.yml
-
 stages:
 - stage: GenerateSASTokens
+  variables:
+  - template: variables/${{environmentType.parameters}}.parameters.yml
   jobs:
   - job: SourceSASToken
     steps:
@@ -37,6 +36,8 @@ stages:
       displayName: 'Generate SAS Token for Destination'
 
 - stage: CopyFiles
+  variables:
+  - template: variables/${{environmentType.parameters}}.parameters.yml
   jobs:
   - job: UseAzCopy
     steps:
