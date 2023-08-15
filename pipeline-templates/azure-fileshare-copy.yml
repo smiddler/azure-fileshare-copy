@@ -36,8 +36,6 @@ stages:
       displayName: 'Generate SAS Token for Destination'
 
 - stage: CopyFiles
-  variables:
-  - template: variables/${{environmentType.parameters}}.parameters.yml
   jobs:
   - job: UseAzCopy
     steps:
