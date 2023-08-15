@@ -3,7 +3,7 @@ parameters:
   type: string
 
 variables:
-- template: variables/$(environmentType).parameters.yml
+- template: variables/${{environmentType.parameters}}.parameters.yml
 
 stages:
 - stage: GenerateSASTokens
