@@ -1,7 +1,19 @@
 parameters:
-  sourceServiceConnection: 'appreg-beisdev-tst-vertointernal-devops-azurerm'
-  destinationServiceConnection: 'appreg-beisdev-tst-vertointernal-devops-azurerm'
-  sourceStorageAccount: 'rgbeisdevukscorpdtp984b'
-  destinationStorageAccount: 'sabeisdevukststintgr'
-  sourceFileShare: 'logicapp-beisdev-uk-dev-vertointegration9535'
-  destinationFileShare: 'app-beisdev-uks-tst-verto-internal-integration-content'
+ - name: sourceServiceConnection
+   type: string
+   default: 'appreg-beisdev-tst-vertointernal-devops-azurerm'
+ - name: destinationServiceConnection
+   type: string
+   default: 'appreg-beisdev-tst-vertointernal-devops-azurerm'
+ - name: sourceStorageAccount
+   type: string
+   default: 'rgbeisdevukscorpdtp984b'
+ - name: destinationStorageAccount
+   type: string
+   default: 'sabeisdevukststintgr'
+ - name: sourceFileShare
+   type: string
+   default: 'logicapp-beisdev-uk-dev-vertointegration9535'
+ - name: destinationFileShare
+   type: string
+   default: 'app-beisdev-uks-tst-verto-internal-integration-content'
