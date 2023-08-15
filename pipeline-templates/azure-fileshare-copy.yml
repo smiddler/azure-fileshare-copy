@@ -6,7 +6,7 @@ stages:
 
 - stage: GenerateSASTokens
   variables:
-    - template: variables/${{parameters.environmentType}}.parameters.yml
+    - template: ../variables/${{parameters.environmentType}}.parameters.yml
   jobs:
   - job: SourceSASToken
     steps:
@@ -38,7 +38,7 @@ stages:
 
 - stage: CopyFiles
   variables:
-    - template: variables/${{parameters.environmentType}}.parameters.yml
+    - template: ../variables/${{parameters.environmentType}}.parameters.yml
   jobs:
   - job: UseAzCopy
     steps:
