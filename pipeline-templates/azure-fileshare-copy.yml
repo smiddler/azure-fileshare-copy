@@ -3,9 +3,11 @@ parameters:
   type: string
 
 stages:
+
+variables:
+ - template: variables/${{parameters.environmentType}}.parameters.yml
+
 - stage: GenerateSASTokens
-  variables:
-  - template: variables/${{environmentType.parameters}}.parameters.yml
   jobs:
   - job: SourceSASToken
     steps:
