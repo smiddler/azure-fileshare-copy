@@ -1,0 +1,45 @@
+parameters:
+- name: environmentType
+  type: string
+
+variables:
+- template: variables/$(environmentType).parameters.yml
+
+stages:
+- stage: GenerateSASTokens
+  jobs:
+  - job: SourceSASToken
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(sourceServiceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Generate SAS token for source
+          echo "Generating SAS for source..."
+          src_sas=$(az storage account generate-sas --permissions r --account-name $(sourceStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
+          echo "##vso[task.setvariable variable=srcSasToken;]$src_sas"
+      displayName: 'Generate SAS Token for Source'
+
+  - job: DestinationSASToken
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(destinationServiceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Generate SAS token for destination
+          echo "Generating SAS for destination..."
+          dest_sas=$(az storage account generate-sas --permissions w --account-name $(destinationStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
+          echo "##vso[task.setvariable variable=destSasToken;]$dest_sas"
+      displayName: 'Generate SAS Token for Destination'
+
+- stage: CopyFiles
+  jobs:
+  - job: UseAzCopy
+    steps:
+    - script: |
+        azcopy copy "https://$(sourceStorageAccount).file.core.windows.net/$(sourceFileShare)/site/wwwroot?$(srcSasToken)" "https://$(destinationStorageAccount).file.core.windows.net/$(destinationFileShare)/site/wwwroot?$(destSasToken)" --recursive --include-pattern 'workflow.json'
+      displayName: 'Copy Files using AzCopy'
