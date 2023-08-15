@@ -1,0 +1,23 @@
+name: $(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+
+# Deploy to the test environment.
+- template: pipeline-templates/azure-fileshare-copy.yml
+  parameters:
+    environmentType: test
+
+# Deploy to the uat environment.
+- template: pipeline-templates/azure-fileshare-copy.yml
+  parameters:
+    environmentType: uat
+
+# Deploy to the production environment.
+- template: pipeline-templates/azure-fileshare-copy.yml
+  parameters:
+    environmentType: prod
