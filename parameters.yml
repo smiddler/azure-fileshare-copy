@@ -1,0 +1,7 @@
+parameters:
+  sourceServiceConnection: 'appreg-beisdev-tst-vertointernal-devops-azurerm'
+  destinationServiceConnection: 'appreg-beisdev-tst-vertointernal-devops-azurerm'
+  sourceStorageAccount: 'rgbeisdevukscorpdtp984b'
+  destinationStorageAccount: 'sabeisdevukststintgr'
+  sourceFileShare: 'logicapp-beisdev-uk-dev-vertointegration9535'
+  destinationFileShare: 'app-beisdev-uks-tst-verto-internal-integration-content'
