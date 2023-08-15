@@ -10,7 +10,6 @@ stages:
   jobs:
   - job: SourceSASToken
     displayName: 'Generate SAS Token for Source'
-    id: generateSourceSas
     steps:
     - task: AzureCLI@2
       inputs:
@@ -26,7 +25,6 @@ stages:
 
   - job: DestinationSASToken
     displayName: 'Generate SAS Token for Destination'
-    id: generateDestinationSas
     steps:
     - task: AzureCLI@2
       inputs:
@@ -43,8 +41,8 @@ stages:
 - stage: CopyFiles_${{parameters.environmentType}}
   variables:
     - template: ../variables/${{parameters.environmentType}}.parameters.yml
-    srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['generateSourceSas.srcSasToken'] ]
-    srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['generateDestinationSas.destSasToken'] ]
+    srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['SourceSASToken.srcSasToken'] ]
+    srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['DestinationSASToken.destSasToken'] ]
   jobs:
   - job: UseAzCopy
     steps:
