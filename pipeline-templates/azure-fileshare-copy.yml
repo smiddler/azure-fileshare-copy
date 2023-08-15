@@ -4,7 +4,7 @@ parameters:
 
 stages:
 
-- stage: GenerateSASTokens
+- stage: GenerateSASTokens_${{parameters.environmentType}}
   variables:
     - template: ../variables/${{parameters.environmentType}}.parameters.yml
   jobs:
@@ -36,7 +36,7 @@ stages:
           echo "##vso[task.setvariable variable=destSasToken;]$dest_sas"
       displayName: 'Generate SAS Token for Destination'
 
-- stage: CopyFiles
+- stage: CopyFiles_${{parameters.environmentType}}
   variables:
     - template: ../variables/${{parameters.environmentType}}.parameters.yml
   jobs:
