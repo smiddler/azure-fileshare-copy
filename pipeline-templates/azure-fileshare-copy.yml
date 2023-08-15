@@ -9,6 +9,8 @@ stages:
     - template: ../variables/${{parameters.environmentType}}.parameters.yml
   jobs:
   - job: SourceSASToken
+    displayName: 'Generate SAS Token for Source'
+    id: generateSourceSas
     steps:
     - task: AzureCLI@2
       inputs:
@@ -19,10 +21,12 @@ stages:
           # Generate SAS token for source
           echo "Generating SAS for source..."
           src_sas=$(az storage account generate-sas --permissions r --account-name $(sourceStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
-          echo "##vso[task.setvariable variable=srcSasToken;]$src_sas"
+          echo "##vso[task.setvariable variable=srcSasToken;isOutput=true]$src_sas"
       displayName: 'Generate SAS Token for Source'
 
   - job: DestinationSASToken
+    displayName: 'Generate SAS Token for Destination'
+    id: generateDestinationSas
     steps:
     - task: AzureCLI@2
       inputs:
@@ -33,12 +37,14 @@ stages:
           # Generate SAS token for destination
           echo "Generating SAS for destination..."
           dest_sas=$(az storage account generate-sas --permissions w --account-name $(destinationStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
-          echo "##vso[task.setvariable variable=destSasToken;]$dest_sas"
+          echo "##vso[task.setvariable variable=destSasToken;isOutput=true]$dest_sas"
       displayName: 'Generate SAS Token for Destination'
 
 - stage: CopyFiles_${{parameters.environmentType}}
   variables:
     - template: ../variables/${{parameters.environmentType}}.parameters.yml
+    srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['generateSourceSas.srcSasToken'] ]
+    srcSasToken: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['generateDestinationSas.destSasToken'] ]
   jobs:
   - job: UseAzCopy
     steps:
