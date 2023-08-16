@@ -49,6 +49,8 @@ stages:
     value: $[ stageDependencies.GenerateSASTokens_${{parameters.environmentType}}.DestinationSASToken.outputs['destSas.destSasToken'] ]
   jobs:
   - job: UseAzCopy
+    variables:
+      destSasToken: $[ stageDependencies.GenerateSASTokens_${{parameters.environmentType}}.DestinationSASToken.outputs['destSas.destSasToken'] ]
     steps:
     - script: |
         azcopy copy "https://${{variables.sourceStorageAccount}}.file.core.windows.net/${{variables.sourceFileShare}}/site/wwwroot?${{variables.srcSasToken}}" "https://${{variables.destinationStorageAccount}}.file.core.windows.net/${{variables.destinationFileShare}}/site/wwwroot?${{variables.destSasToken}}" --recursive --include-pattern 'workflow.json'
