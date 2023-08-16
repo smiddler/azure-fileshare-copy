@@ -36,8 +36,8 @@ stages:
           echo "Generating SAS for destination..."
           dest_sas=$(az storage account generate-sas --permissions w --account-name $(destinationStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
           echo "##vso[task.setvariable variable=destSasToken;isOutput=true]$dest_sas"
+        name: destSas
       displayName: 'Generate SAS Token for Destination'
-      name: destSas
 
 - stage: CopyFiles_${{parameters.environmentType}}
   dependsOn: GenerateSASTokens_${{parameters.environmentType}}
