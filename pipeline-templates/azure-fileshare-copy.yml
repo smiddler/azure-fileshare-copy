@@ -46,7 +46,7 @@ stages:
   - name: srcSasToken
     value: $[ stageDependencies.GenerateSASTokens_${{parameters.environmentType}}.SourceSASToken.outputs['SourceSASToken.srcSasToken'] ]
   - name: destSasToken
-    value: $[ stageDependencies.GenerateSASTokens_${{parameters.environmentType}}.DestinationSASToken.outputs['destSas.destSasToken'] ]
+    value: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['DestinationSASToken.destSas.destSasToken'] ]
   jobs:
   - job: UseAzCopy
     steps:
