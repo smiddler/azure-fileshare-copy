@@ -26,6 +26,7 @@ stages:
   - job: DestinationSASToken
     displayName: 'Generate SAS Token for Destination'
     steps:
+      name: destSas
     - task: AzureCLI@2
       inputs:
         azureSubscription: ${{variables.destinationServiceConnection}}
@@ -36,7 +37,6 @@ stages:
           echo "Generating SAS for destination..."
           dest_sas=$(az storage account generate-sas --permissions w --account-name $(destinationStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
           echo "##vso[task.setvariable variable=destSasToken;isOutput=true]$dest_sas"
-        name: destSas
       displayName: 'Generate SAS Token for Destination'
 
 - stage: CopyFiles_${{parameters.environmentType}}
