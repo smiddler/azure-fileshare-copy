@@ -36,15 +36,17 @@ stages:
           echo "Generating SAS for destination..."
           dest_sas=$(az storage account generate-sas --permissions w --account-name $(destinationStorageAccount) --services f --resource-types sco --expiry $(date -u -d '1 hour' +%Y-%m-%dT%H:%MZ) -o tsv)
           echo "##vso[task.setvariable variable=destSasToken;isOutput=true]$dest_sas"
+        name: destSas
       displayName: 'Generate SAS Token for Destination'
 
 - stage: CopyFiles_${{parameters.environmentType}}
+  dependsOn: GenerateSASTokens_${{parameters.environmentType}}
   variables:
   - template: ../variables/${{parameters.environmentType}}.parameters.yml
   - name: srcSasToken
-    value: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['SourceSASToken.srcSasToken'] ]
+    value: $[ stageDependencies.GenerateSASTokens_${{parameters.environmentType}}.SourceSASToken.outputs['SourceSASToken.srcSasToken'] ]
   - name: destSasToken
-    value: $[ dependencies.GenerateSASTokens_${{parameters.environmentType}}.outputs['DestinationSASToken.destSasToken'] ]
+    value: $[ stageDependencies.GenerateSASTokens_${{parameters.environmentType}}.DestinationSASToken.outputs['destSas.destSasToken'] ]
   jobs:
   - job: UseAzCopy
     steps:
